@@ -15,7 +15,8 @@ class DataHandler:
          
                 if not filename:
                     print("Downloading data from dane.gov.pl...")
-                    url = 'https://www.dane.gov.pl/media/resources/20190513/Liczba_os%C3%B3b_kt%C3%B3re_przystapi%C5%82y_lub_zda%C5%82y_egzamin_maturalny.csv'
+                    url = 'https://www.dane.gov.pl/media/resources/20190520/Liczba_os%C3%B3b_kt%C3%B3re_przystapi%C5%82y_lub_zda%C5%82y_egzamin_maturalny.csv'
+                   #url = 'https://www.dane.gov.pl/media/resources/20190513/Liczba_os%C3%B3b_kt%C3%B3re_przystapi%C5%82y_lub_zda%C5%82y_egzamin_maturalny.csv'
                     with urlopen(url) as response:
                         response = response.read().decode('cp1250')
                 else:
@@ -36,7 +37,7 @@ class DataHandler:
                 next(reader, None)
 
                 for row in reader:
-                    if row:
+                    if row and row[0] != "Polska":
                         c.execute("INSERT INTO matura VALUES(?,?,?,?,?)", row)
                 conn.commit()
 
@@ -166,6 +167,7 @@ class Matura:
         for row in result:
             print(row)  
 
+"""
 def main():
     m = Matura('tttest.csv')
     m.calculate_mean('Pomorskie', 2015)
@@ -179,3 +181,4 @@ def main():
     m.compare_two_territories('Pomorskie', 'Podlaskie')
 
 main()
+"""
