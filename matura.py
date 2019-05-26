@@ -55,14 +55,25 @@ class Matura:
     def __init__(self, filename = None):
         self.dataHandler = DataHandler(filename)
      
-
-    """ def calculate_mean(self, territory, year):
-        results = self.dataHandler.select(["SUM(count)"], 
-                                        {"territory": territory,
-                                         "type"     : "przystąpiło",
-                                         "year"     : year})
-        print(territory, year, results[0][0])
-    """
+    def calculate_mean(self, territory, year, mf=None):
+        modifier = ''
+        if(mf):
+            modifier = 'AND A.gender = "' + mf +'" '
+       
+        sql= ('SELECT AVG(x) '
+              'FROM (SELECT A.year, CAST(SUM(A.count) AS REAL)/SUM(B.count) AS x '
+              'FROM matura A, matura B ' 
+              'WHERE A.type="zdało" '
+              'AND B.type="przystąpiło" ' 
+              'AND A.territory=B.territory ' 
+              'AND A.year = B.year ' 
+              'AND A.gender = B.gender '+modifier+' AND A.territory=? '
+	      'AND A.year <=? '
+              'GROUP BY A.year)')
+        result = self.dataHandler.raw_select(sql, (territory,year))
+        print(territory)
+        for row in result:
+            print(row)
 
     def calculate_yearly_pass_rate(self, territory, mf=None):
         modifier = ''
@@ -157,7 +168,8 @@ class Matura:
 
 def main():
     m = Matura('tttest.csv')
-    #m.calculate_mean('Polska', 2010)
+    m.calculate_mean('Pomorskie', 2015)
+    print('\n')
     m.calculate_yearly_pass_rate('Pomorskie')
     print('\n')
     m.find_best_territory()
