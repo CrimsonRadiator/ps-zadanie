@@ -1,6 +1,25 @@
 import argparse, controller
 parser = argparse.ArgumentParser()
 
+voivodeships_list = ['Dolnośląskie',
+                'Kujawsko-pomorskie',
+                'Lubelskie',
+                'Lubuskie',
+                'Łódzkie',
+                'Małopolskie',
+                'Mazowieckie',
+                'Opolskie',
+                'Podkarpackie',
+                'Podlaskie',
+                'Pomorskie',
+                'Śląskie',
+                'Świętokrzyskie',
+                'Warmińsko-Mazurskie',
+                'Wielkopolskie',
+                'Zachodniopomorskie']
+
+years_list = range(2010, 2019)
+
 
 class UserInterface:
     def __init__(self):
@@ -8,22 +27,41 @@ class UserInterface:
     
     def createParser(self):
         gender_group = parser.add_mutually_exclusive_group()
-        gender_group.add_argument("-m", "--male", action="store_const", dest="gender", const="Mężczyźni", help="Calculate statistics only for the males.", default=None)
 
-        gender_group.add_argument("-f", "--female", action="store_const", dest="gender", const="Kobiety", help="Calculate statistics only for the females.", default=None)
+        gender_group.add_argument("-m", 
+                                  "--male", 
+                                  action="store_const", 
+                                  dest="gender", 
+                                  const="mężczyźni", 
+                                  help="Calculate statistics only for the males.", 
+                                  default=None)
 
-        parser.add_argument("--filename", action="store", type=str, dest="filename", help="Specify filename with data.", required=False, default=None)
+        gender_group.add_argument("-f", 
+                                  "--female", 
+                                  action="store_const", 
+                                  dest="gender", 
+                                  const="kobiety", 
+                                  help="Calculate statistics only for the females.", 
+                                  default=None)
+
+        parser.add_argument("--filename", 
+                            action="store", 
+                            type=str, 
+                            dest="filename", 
+                            help="Specify filename with data.", 
+                            required=False, 
+                            default=None)
 
 
-        subparsers = parser.add_subparsers(dest='command', required=True)
+        subparsers = parser.add_subparsers(dest='command', help='Choose from {mean, yearly, best, regressive, compare}', required=True, metavar='COMMAND')
 
         mean_subparser = subparsers.add_parser('mean', description="Calculate the mean matura pass rate for voivodeships across the years")
-        mean_subparser.add_argument('voivodeship', type=str,  help='Voivodeship name')
-        mean_subparser.add_argument('year', type=int)
+        mean_subparser.add_argument('voivodeship', type=str,  help='Voivodeship name', choices=voivodeships_list, metavar='VOIVODESHIP')
+        mean_subparser.add_argument('year', type=int, help="Calculate data from 2010 to this year", choices=years_list, metavar='YEAR')
         mean_subparser.set_defaults(func=self.calculate_mean)
 
         yearly_subparser = subparsers.add_parser('yearly', description="Calculate the yearly pass rate for a target voivodeship ")
-        yearly_subparser.add_argument('voivodeship', type=str,  help='Voivodeship name.')
+        yearly_subparser.add_argument('voivodeship', type=str,  help='Voivodeship name.', choices=voivodeships_list, metavar='VOIVODESHIP')
         yearly_subparser.set_defaults(func=self.calculate_yearly)
 
         best_subparser = subparsers.add_parser('best', description="Find the voivodeship with the best pass rate across the years.")
@@ -33,8 +71,8 @@ class UserInterface:
         regressive_subparser.set_defaults(func=self.calculate_regressive)
 
         compare_subparser = subparsers.add_parser('compare', description="Compare the yearly pass rates in the two voivodeships.")
-        compare_subparser.add_argument('voivodeship1', type=str,  help='First voivodeship name.')
-        compare_subparser.add_argument('voivodeship2', type=str,  help='Scond voivodeship name.')
+        compare_subparser.add_argument('voivodeship1', type=str,  help='First voivodeship name.', choices=voivodeships_list, metavar='VOIVODESHIP_1')
+        compare_subparser.add_argument('voivodeship2', type=str,  help='Scond voivodeship name.', choices=voivodeships_list, metavar='VOIVODESHIP_2')
         compare_subparser.set_defaults(func=self.calculate_compare)
         return parser
 
