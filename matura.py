@@ -113,20 +113,41 @@ class UserInterface:
         args.func(args)
 
     def calculate_mean(self, args):
-        self.c.calculate_mean(args.voivodeship, args.year, args.gender)
+        print('Calculating mean pass rate for', args.voivodeship, 'from 2010 to', args.year)
+        result = self.c.calculate_mean(args.voivodeship, args.year, args.gender)
+
+        for row in result:
+            print('{:.2f}%'.format(row[0] * 100))
 
     def calculate_yearly(self, args):
-        self.c.calculate_yearly_pass_rate(args.voivodeship, args.gender)
+
+        print('Calculating yearly pass rate for', args.voivodeship)
+        result = self.c.calculate_yearly_pass_rate(args.voivodeship, args.gender)
+        for row in result:
+            print('{:d} {:.2f}%'.format(row[0], row[1] * 100))
 
     def calculate_best(self, args):
-        self.c.find_best_territory(args.gender)
+
+        print('Finding voivodeship with the best pass rate across the years')
+        result = self.c.find_best_territory(args.gender)
+
+        for row in result:
+            print('{:d}: {:19} {:.2f}%'.format(row[0], row[1], row[2] * 100))
 
     def calculate_regressive(self, args):
-        self.c.find_regressive_territories(args.gender)
 
+        print('Finding regressive voivodeships')
+        result = self.c.find_regressive_territories(args.gender)
+
+        for row in result:
+            print('{:19}  {:d}: {:.2f}% -> {:d}: {:.2f}%'.format(row[2], row[0], row[3] * 100, row[1], row[4] * 100))
     def calculate_compare(self, args):
-        self.c.compare_two_territories(args.voivodeship1, args.voivodeship2, args.gender)
 
+        print('Comparing', args.voivodeship1, 'and', args.voivodeship2, 'across the years')
+        result = self.c.compare_two_territories(args.voivodeship1, args.voivodeship2, args.gender)
+
+        for row in result:
+            print('{} {:19} {:.2f}%'.format(row[0], row[1], row[2] * 100))
 
 def main():
     ui = UserInterface()
