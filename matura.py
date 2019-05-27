@@ -23,10 +23,14 @@ years_list = range(2010, 2019)
 
 
 class UserInterface:
+    """ This is a class for the user interaction."""
+
     def __init__(self):
         self.parser = self.create_parser()
 
     def create_parser(self):
+        """Creates parser for command line arguments."""
+
         gender_group = parser.add_mutually_exclusive_group()
 
         gender_group.add_argument("-m",
@@ -102,6 +106,8 @@ class UserInterface:
         return parser
 
     def parse(self):
+        """ Parse command line arguments."""
+
         args = parser.parse_args()
         self.c = controller.Controller(args.filename)
         args.func(args)

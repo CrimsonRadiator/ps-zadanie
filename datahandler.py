@@ -4,6 +4,8 @@ import sqlite3
 
 
 class DataHandler:
+    """A Class for downloading data and managing database"""
+
     def __init__(self, filename=None):
         with sqlite3.connect('matura.db') as conn:
             c = conn.cursor()
@@ -42,6 +44,11 @@ class DataHandler:
                 conn.commit()
 
     def raw_select(self, sql, arg=None):
+        """Sends SQL query to database.
+        Arguments:
+        sql (str): SQL query
+        arg (tuple): optional arguments for query (default None)
+        """
         with sqlite3.connect('matura.db') as conn:
             c = conn.cursor()
             if (arg):

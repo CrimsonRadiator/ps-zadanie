@@ -2,11 +2,25 @@ import datahandler
 
 
 class Controller:
+    """A class for communication between the database and the user intrface.
+
+    Specifies SQL queries and presents statistics
+
+    Attributes:
+    filename (str): file name of .csv file with data (default None)
+    """
 
     def __init__(self, filename=None):
         self.dataHandler = datahandler.DataHandler(filename)
 
     def calculate_mean(self, territory, year, mf=None):
+        """Calculate mean pass rate across the years.
+
+        Arguments:
+        territory (str): Name of territory
+        year (int): Maximum year used to calculate statistics
+        mf (str): "mężczyźni" or "kobiety" to specify filter (default None)
+        """
         print('Calculating mean pass rate for', territory, 'from 2010 to', year)
         modifier = self.get_modifier(mf)
 
@@ -28,6 +42,13 @@ class Controller:
             print('{:.2f}%'.format(row[0] * 100))
 
     def calculate_yearly_pass_rate(self, territory, mf=None):
+        """Calculate yearly pass rate for the target territory.
+
+        Arguments:
+        territory (str): Name of territory
+        mf (str): "mężczyźni" or "kobiety" to specify filter (default None)
+        """
+
         print('Calculating yearly pass rate for', territory)
         modifier = self.get_modifier(mf)
 
@@ -46,6 +67,12 @@ class Controller:
             print('{:d} {:.2f}%'.format(row[0], row[1] * 100))
 
     def find_best_territory(self, mf=None):
+        """Find the territory with the best pass rate across the years.
+
+        Arguments:
+        mf (str): "mężczyźni" or "kobiety" to specify filter (default None)
+        """
+
         print('Finding voivodeship with the best pass rate across the years')
         modifier = self.get_modifier(mf)
 
@@ -64,9 +91,15 @@ class Controller:
         result = self.dataHandler.raw_select(sql)
 
         for row in result:
-            print('{:d}: {} {:.2f}%'.format(row[0], row[1], row[2] * 100))
+            print('{:d}: {:19} {:.2f}%'.format(row[0], row[1], row[2] * 100))
 
     def find_regressive_territories(self, mf=None):
+        """Find regressive territories.
+
+        Arguments:
+        mf (str): "mężczyźni" or "kobiety" to specify filter (default None)
+        """
+
         print('Finding regressive voivodeships')
         modifier = self.get_modifier(mf)
 
@@ -98,6 +131,15 @@ class Controller:
             print('{:19}  {:d}: {:.2f}% -> {:d}: {:.2f}%'.format(row[2], row[0], row[3] * 100, row[1], row[4] * 100))
 
     def compare_two_territories(self, territoryA, territoryB, mf=None):
+        """Compare two territories across the years.
+
+        Arguments:
+        territoryA (str): Name of the first territory
+        territoryB (str): Name of the second territory
+        mf (str): "mężczyźni" or "kobiety" to specify filter (default None)
+        """
+
+
         print('Comparing', territoryA, 'and', territoryB, 'across the years')
         modifier = self.get_modifier(mf)
 
