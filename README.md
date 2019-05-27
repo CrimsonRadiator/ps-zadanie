@@ -5,6 +5,7 @@ Program prezentujący statystki odnośnie zdawalności [matur](https://dane.gov.
 W przypadku gdy skrypt znajdzie w bieżącym katalogu plik `matura.db` wykorzystuje bazę danych do obliczeń. W przeciwnym wypadku, pobiera dane w formacie `.csv` z ww. storny i tworzy na jej podstawie bazę danych.
 ## Wymagania
 - python3.7 skompilowany z obsługą libsqlite3-dev oraz libssl-dev
+- pytest-3 (do testów jednostkowych)
 ## Użycie
 Aby uruchomić skrypt, wstarczy wpisać
 ```
@@ -40,3 +41,8 @@ Wypisuje województwa w których odnotowano spadek zdawalności względem poprze
 użycie: `matura.py compare VOIVODESHIP1 VOIVODESHIP2`
 
 Porównuje zdawalność województwa `VOIVODESHIP1` z województwem `VOIVODESHIP2` na przestrzeni lat, wypisując te które miało większą zdawalność w danym roku.
+
+## Testowanie
+```
+pytest-3 tests.py
+```
